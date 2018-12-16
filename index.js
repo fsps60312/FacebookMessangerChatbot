@@ -1,15 +1,21 @@
+'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const request = require('request');
+const message_handler=require('./message_handler');
+
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
 	let response;
 	// Check if the message contains text
 	if (received_message.text) {
+		console.log(`request_text: ${received_message.text}`);
 		// Create the payload for a basic text message
+		const response_text=message_handler.get_response_text(sender_psid,received_message.text);
+		console.log(`response_text: ${response_text}`);
 		response = {
-			"text": `You sent the message: "${received_message.text}". Now send me an image!`
-		}
+			"text": response_text
+		};
 	} 
 
 	// Sends the response message
@@ -33,13 +39,13 @@ function callSendAPI(sender_psid, response) {
 
 	// Send the HTTP request to the Messenger Platform
 	request({
-			"uri": "https://graph.facebook.com/v2.6/me/messages",
-			"qs": { "access_token": PAGE_ACCESS_TOKEN },
-			"method": "POST",
-			"json": request_body
-		}, (err, res, body) => {
+		"uri": "https://graph.facebook.com/v2.6/me/messages",
+		"qs": { "access_token": PAGE_ACCESS_TOKEN },
+		"method": "POST",
+		"json": request_body
+	}, (err, res, body) => {
 		if (!err) {
-			console.log('message sent!')
+			console.log(`message sent!`);
 		} else {
 			console.error("Unable to send message:" + err);
 		}
@@ -66,7 +72,6 @@ var credentials=
 
 /// Create an HTTP server
 
-'use strict';
 
 // Imports dependencies and set up http server
 const
@@ -97,7 +102,7 @@ app.post('/webhook', (req, res) => {
 			// Get the webhook event. entry.messaging is an array, but 
 			// will only ever contain one event, so we get index 0
 			let webhook_event = entry.messaging[0];
-			console.log(webhook_event);
+			//console.log(webhook_event); //for debugging
 
 			// Get the sender PSID
 			let sender_psid = webhook_event.sender.id;
@@ -123,37 +128,32 @@ app.post('/webhook', (req, res) => {
 /// Add webhook verification
 
 // Adds support for GET requests to our webhook
-app.get('/webhook',(req,res)=>
-	{
-		console.log('GET EVENT');
-		console.log(req);
-		// Your verify token. Should be a random string.
-		let VERIFY_TOKEN="fay8Qc0pcLlKudzlvwiX2vYtKHwRH8YJvMq5FsYO1axi4bRoApBCLr0hLuJTSiwS";
+app.get('/webhook',(req,res)=>{
+	console.log('GET EVENT');
+	console.log(req);
+	// Your verify token. Should be a random string.
+	let VERIFY_TOKEN="fay8Qc0pcLlKudzlvwiX2vYtKHwRH8YJvMq5FsYO1axi4bRoApBCLr0hLuJTSiwS";
 
-		// Parse the query params
-		let mode=req.query['hub.mode'];
-		let token=req.query['hub.verify_token'];
-		let challenge=req.query['hub.challenge'];
+	// Parse the query params
+	let mode=req.query['hub.mode'];
+	let token=req.query['hub.verify_token'];
+	let challenge=req.query['hub.challenge'];
 
-		// Checks if a token and mode is in the query string of the request
-		if(mode&&token)
-		{
-			// Checks the mode and token sent is correct
-			if(mode==='subscribe'&&token===VERIFY_TOKEN)
-			{
-				// Responds with the challenge token from the request
-				console.log('WEBHOOK_VERIFIED');
-				res.status(200).send(challenge);
-				//res.sendStatus(200);
-			}
-			else
-			{
-				// Responds with '403 Forbidden' if verify tokens do not match
-				res.sendStatus(403);
-			}
+	// Checks if a token and mode is in the query string of the request
+	if(mode&&token){
+		// Checks the mode and token sent is correct
+		if(mode==='subscribe'&&token===VERIFY_TOKEN){
+			// Responds with the challenge token from the request
+			console.log('WEBHOOK_VERIFIED');
+			res.status(200).send(challenge);
+			//res.sendStatus(200);
 		}
-		else
-		{
-			res.sendStatus(404);
+		else{
+			// Responds with '403 Forbidden' if verify tokens do not match
+			res.sendStatus(403);
 		}
-	});
+	}
+	else{
+		res.sendStatus(404);
+	}
+});
