@@ -1,4 +1,3 @@
-'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const request = require('request');
 const message_handler=require('./message_handler');
@@ -6,17 +5,48 @@ const message_handler=require('./message_handler');
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
+	// Debug output
+	callSendAPI(sender_psid,{"text":JSON.stringify(received_message)});
+
 	let response;
 	// Check if the message contains text
 	if (received_message.text) {
-		console.log(`request_text: ${received_message.text}`);
 		// Create the payload for a basic text message
+		console.log(`request_text: ${received_message.text}`);
 		const response_text=message_handler.get_response_text(sender_psid,received_message.text);
 		console.log(`response_text: ${response_text}`);
 		response = {
 			"text": response_text
-		};
+		}
 	} 
+	else if (received_message.attachments){
+		// Gets the URL of the message attachment
+		let attachment_url=received_message.attachments[0].payload.url;
+		console.log(received_message.attachments);
+		response={
+			"attachment":{
+				"type":"template",
+				"payload":{
+					"template_type":"generic",
+					"elements":[{
+						"title": "Is this the right picture?",
+						"subtitle":"Tap a button to answer.",
+						"image_url":attachment_url,
+						"buttons":[{
+								"type":"postback",
+								"title":"Yes!",
+								"payload":"yes"
+							},{
+								"type":"postback",
+								"title":"No!",
+								"payload":"no"
+							}
+						]
+					}]
+				}
+			}
+		}
+	}
 
 	// Sends the response message
 	callSendAPI(sender_psid, response);
@@ -24,7 +54,25 @@ function handleMessage(sender_psid, received_message) {
 
 // Handles messaging_postbacks events
 function handlePostback(sender_psid, received_postback) {
+	console.log("postback!");
+	
+	// Debug output
+	callSendAPI(sender_psid,{"text":JSON.stringify(received_postback)});
 
+	let response;
+
+	// Get the payload for the postback
+	const payload=received_postback.payload;
+	console.log(`payload: ${payload}`);
+
+	// Set the response based on the postback payload
+	if (payload === 'yes'){
+		response={"text":"Thanks!"};
+	}else if (payload=='no'){
+		response={"text":"Oops, try sending another image."};
+	}
+	// Send the message to acknowledge the postback
+	callSendAPI(sender_psid,response);
 }
 
 // Sends response messages via the Send API
@@ -45,7 +93,7 @@ function callSendAPI(sender_psid, response) {
 		"json": request_body
 	}, (err, res, body) => {
 		if (!err) {
-			console.log(`message sent!`);
+			console.log('message sent!')
 		} else {
 			console.error("Unable to send message:" + err);
 		}
@@ -72,6 +120,7 @@ var credentials=
 
 /// Create an HTTP server
 
+'use strict';
 
 // Imports dependencies and set up http server
 const
@@ -91,6 +140,7 @@ httpsServer.listen(60312,()=>console.log("webhook is listening"));*/
 // Creates the endpoint for our webhook
 app.post('/webhook', (req, res) => {  
 
+	console.log("POST: "+String(new Date()));
 	// Parse the request body from the POST
 	let body = req.body;
 
@@ -102,7 +152,7 @@ app.post('/webhook', (req, res) => {
 			// Get the webhook event. entry.messaging is an array, but 
 			// will only ever contain one event, so we get index 0
 			let webhook_event = entry.messaging[0];
-			//console.log(webhook_event); //for debugging
+			console.log(webhook_event); // for debugging
 
 			// Get the sender PSID
 			let sender_psid = webhook_event.sender.id;
@@ -129,8 +179,8 @@ app.post('/webhook', (req, res) => {
 
 // Adds support for GET requests to our webhook
 app.get('/webhook',(req,res)=>{
-	console.log('GET EVENT');
-	console.log(req);
+	console.log("GET: "+String(new Date()));
+	console.log(req); // for debugging
 	// Your verify token. Should be a random string.
 	let VERIFY_TOKEN="fay8Qc0pcLlKudzlvwiX2vYtKHwRH8YJvMq5FsYO1axi4bRoApBCLr0hLuJTSiwS";
 

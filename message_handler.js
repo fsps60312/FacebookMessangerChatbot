@@ -8,6 +8,6 @@ module.exports={
 			message
 		]);
 		if(result.err)return `Error: ${result.err}`;
-		else return result.stdout;
+		else return String(result.stdout);// Must use "String()" or bot won't work
 	}
 };
