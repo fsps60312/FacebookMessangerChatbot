@@ -21,8 +21,11 @@ function handleMessage(sender_psid, received_message) {
 	} 
 	else if (received_message.attachments){
 		// Gets the URL of the message attachment
+		let attachment_type=received_message.attachments[0].type;
 		let attachment_url=received_message.attachments[0].payload.url;
-		console.log(received_message.attachments);
+		// let response_type=String(attachment_type+"_url");
+		// console.log(response_type);
+		// console.log(received_message.attachments);
 		response={
 			"attachment":{
 				"type":"template",
@@ -141,8 +144,10 @@ httpsServer.listen(60312,()=>console.log("webhook is listening"));*/
 app.post('/webhook', (req, res) => {  
 
 	console.log("POST: "+String(new Date()));
+	// console.log(req); // for debugging
 	// Parse the request body from the POST
 	let body = req.body;
+	console.log(body); // for debugging
 
 	// Check the webhook event is from a Page subscription
 	if (body.object === 'page') {
@@ -152,7 +157,7 @@ app.post('/webhook', (req, res) => {
 			// Get the webhook event. entry.messaging is an array, but 
 			// will only ever contain one event, so we get index 0
 			let webhook_event = entry.messaging[0];
-			console.log(webhook_event); // for debugging
+			// console.log(webhook_event); // for debugging
 
 			// Get the sender PSID
 			let sender_psid = webhook_event.sender.id;
@@ -180,7 +185,7 @@ app.post('/webhook', (req, res) => {
 // Adds support for GET requests to our webhook
 app.get('/webhook',(req,res)=>{
 	console.log("GET: "+String(new Date()));
-	console.log(req); // for debugging
+	// console.log(req); // for debugging
 	// Your verify token. Should be a random string.
 	let VERIFY_TOKEN="fay8Qc0pcLlKudzlvwiX2vYtKHwRH8YJvMq5FsYO1axi4bRoApBCLr0hLuJTSiwS";
 
