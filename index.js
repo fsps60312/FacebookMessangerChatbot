@@ -6,14 +6,14 @@ const message_handler=require('./message_handler');
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
 	// Debug output
-	callSendAPI(sender_psid,{"text":JSON.stringify(received_message)});
+//    callSendAPI(sender_psid,{"text":JSON.stringify(received_message)});
 
 	let response;
 	// Check if the message contains text
 	if (received_message.text) {
 		// Create the payload for a basic text message
 		console.log(`request_text: ${received_message.text}`);
-		const response_text=message_handler.get_response_text(sender_psid,received_message.text);
+		const response_text=message_handler.get_response_text(PAGE_ACCESS_TOKEN,sender_psid,received_message.text);
 		console.log(`response_text: ${response_text}`);
 		response = {
 			"text": response_text
@@ -52,7 +52,7 @@ function handleMessage(sender_psid, received_message) {
 	}
 
 	// Sends the response message
-	callSendAPI(sender_psid, response);
+//    callSendAPI(sender_psid, response);
 }
 
 // Handles messaging_postbacks events
@@ -60,22 +60,15 @@ function handlePostback(sender_psid, received_postback) {
 	console.log("postback!");
 	
 	// Debug output
-	callSendAPI(sender_psid,{"text":JSON.stringify(received_postback)});
+//    callSendAPI(sender_psid,{"text":JSON.stringify(received_postback)});
 
-	let response;
 
 	// Get the payload for the postback
 	const payload=received_postback.payload;
 	console.log(`payload: ${payload}`);
 
-	// Set the response based on the postback payload
-	if (payload === 'yes'){
-		response={"text":"Thanks!"};
-	}else if (payload=='no'){
-		response={"text":"Oops, try sending another image."};
-	}
-	// Send the message to acknowledge the postback
-	callSendAPI(sender_psid,response);
+	const response_text=message_handler.get_response_text(PAGE_ACCESS_TOKEN,sender_psid,payload);
+	console.log(`response_text: ${response_text}`);
 }
 
 // Sends response messages via the Send API
