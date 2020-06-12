@@ -1,0 +1,16 @@
+virt-install --name demo --ram 2048 --disk demo.img,size=20,bus=virtio,format=qcow2 --vcpus 1 --os-type linux --os-variant ubuntu18.04 --network=default --graphics none --console pty,target_type=serial --location ubuntu-18.04.3-desktop-amd64.iso --extra-args 'console=ttyS0,115200n8 serial'
+
+wget https://releases.ubuntu.com/20.04/ubuntu-20.04-live-server-amd64.iso
+
+checklist:
+sudo adduser --no-create-home restricted
+sudo mkdir ../restricted
+sudo cp -r .ssh ../restricted/
+sudo chmod 755 ../restricted/.ssh
+sudo chmod 644 ../restricted/.ssh/*
+sudo vim /etc/cron.deny # prevent restricted use crontab
+sudo vim /etc/security/limits.conf # set process limit, prevent fork bomb
+ssh -R 60313:localhost:22 b05902083@linux1.csie.ntu.edu.tw
+sudo vim /etc/pam.d/sshd
+sudo vim /etc/pam_session.sh # killall -9 -u restricted on logout
+sudo chmod a+x /etc/pam_session.sh

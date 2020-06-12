@@ -1,0 +1,18 @@
+echo "1. started"
+
+# temporaty URL
+export URL=https://cbfc0e7b5f00.ngrok.io
+
+echo "2. challenge" 
+curl -X GET "${URL}/webhook?hub.verify_token=fay8Qc0pcLlKudzlvwiX2vYtKHwRH8YJvMq5FsYO1axi4bRoApBCLr0hLuJTSiwS&hub.challenge=CHALLENGE_ACCEPTED&hub.mode=subscribe"
+
+echo "3. test message"
+curl -H "Content-Type: application/json" -X POST "${URL}/webhook" -d '{"object": "page", "entry": [{"messaging": [{"message": "TEST_MESSAGE"}]}]}'
+
+#
+head /dev/urandom | tr -dc A-Za-z0-9 | head -c 64 ; echo ''
+
+# Page Access Token
+export PAGE_ACCESS_TOKEN=EAAHikQLtm48BAEoeruNVMxpaYC6P4td7UMsEUb63PVLAumoC9j3QCeNG9cnpuwILLik4nxct0jrZAP1bu7p3Gs3XWoEccvTRJA7TsZChr8YQZBlbH02XHrFLQZAZB6g79RqKFhxvwj7DZCEXeV68khwNz1jJkRmCywm49BnVE0GUdHypMWPdZBC
+
+
