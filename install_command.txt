@@ -9,6 +9,7 @@ sudo cp -r .ssh ../restricted/
 sudo chmod 755 ../restricted/.ssh
 sudo chmod 644 ../restricted/.ssh/*
 sudo vim /etc/cron.deny # prevent restricted use crontab
+sudo vim /etc/at.deny # prevent restricted use at
 sudo vim /etc/security/limits.conf # set process limit, prevent fork bomb
 ssh -R 60313:localhost:22 b05902083@linux1.csie.ntu.edu.tw
 sudo vim /etc/pam.d/sshd

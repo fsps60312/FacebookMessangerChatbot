@@ -7,6 +7,7 @@ sudo cp -r .ssh ../restricted/
 sudo chmod 755 ../restricted/.ssh
 sudo chmod 644 ../restricted/.ssh/*
 sudo echo "restricted" >> /etc/cron.deny
+sudo echo "restricted" >> /etc/at.deny
 sudo echo "restricted       hard    nproc           20" >> /etc/security/limits.conf
 sudo echo "restricted       hard    core            1 " >> /etc/security/limits.conf
 sudo echo "session    optional     pam_exec.so quiet /etc/pam_session.sh" >> /etc/pam.d/sshd
