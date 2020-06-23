@@ -1,4 +1,4 @@
-virt-install --name demo --ram 2048 --disk demo.img,size=20,bus=virtio,format=qcow2 --vcpus 1 --os-type linux --os-variant ubuntu18.04 --network=default --graphics none --console pty,target_type=serial --location ubuntu-18.04.3-desktop-amd64.iso --extra-args 'console=ttyS0,115200n8 serial'
+virt-install --name demo --ram 2048 --disk demo.img,size=20,bus=virtio,format=qcow2 --vcpus 1 --os-type linux --os-variant ubuntu20.04 --network=default --graphics none --console pty,target_type=serial --location ubuntu-20.04-live-server-amd64.iso --extra-args 'console=ttyS0,115200n8 serial'
 
 wget https://releases.ubuntu.com/20.04/ubuntu-20.04-live-server-amd64.iso
 

@@ -1,22 +1,23 @@
 # WARNING: this script hasn't tested!
-# ssh -R 60313:localhost:22 b05902083@linux1.csie.ntu.edu.tw
-sudo adduser --no-create-home restricted
+# ssh -R 60313:localhost:22 b05902083@linux11.csie.ntu.edu.tw
+# scp -P 60313 kickstart.txt user@localhost:~
+# ssh user@localhost -p 60313
+# sudo -s
+adduser --no-create-home restricted
 mkdir ../restricted
-sudo mkdir ../restricted
-sudo cp -r .ssh ../restricted/
-sudo chmod 755 ../restricted/.ssh
-sudo chmod 644 ../restricted/.ssh/*
-sudo echo "restricted" >> /etc/cron.deny
-sudo echo "restricted" >> /etc/at.deny
-sudo echo "restricted       hard    nproc           20" >> /etc/security/limits.conf
-sudo echo "restricted       hard    core            1 " >> /etc/security/limits.conf
-sudo echo "session    optional     pam_exec.so quiet /etc/pam_session.sh" >> /etc/pam.d/sshd
-sudo echo -e '#!/bin/sh\nif [ "$PAM_TYPE" = "close_session"  ]; then\n    sudo killall -9 -u restricted\nfi' > /etc/pam_session.sh
-sudo chmod a+x pam_session.sh 
-sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-sudo apt install net-tools inetutils-traceroute python3-pip cowsay fortune-mod
-funny-manpages fortunes-zh opencc rolldice
-sudo pip3 install jupyter tensorflow pandas gensim sklearn
+cp -r .ssh ../restricted/
+chmod 755 ../restricted/.ssh
+chmod 644 ../restricted/.ssh/*
+echo "restricted" >> /etc/cron.deny
+echo "restricted" >> /etc/at.deny
+echo "restricted       hard    nproc           20" >> /etc/security/limits.conf
+echo "restricted       hard    core            1 " >> /etc/security/limits.conf
+echo "session    optional     pam_exec.so quiet /etc/pam_session.sh" >> /etc/pam.d/sshd
+echo -e '#!/bin/sh\nif [ "$PAM_TYPE" = "close_session"  ]; then\n    sudo killall -9 -u restricted\nfi' > /etc/pam_session.sh
+chmod a+x /etc/pam_session.sh 
+apt update && sudo apt upgrade -y && sudo apt autoremove -y
+apt install -y net-tools inetutils-traceroute python3-pip cowsay fortune-mod funny-manpages fortunes-zh opencc rolldice
+pip3 install jupyter tensorflow pandas gensim sklearn
 chmod 700 .
 (uuidgen && echo "找到這個uuid我請你星巴克OwO") > flag.txt
-sudo echo -e '嗨！很高興你發現了這份文件\n我想說的是... user裡面有驚喜哦！(๑╹◡╹๑)' >> ../restricted/wow_you_found_this.txt
+echo -e '嗨！很高興你發現了這份文件\n我想說的是... user裡面有驚喜哦！(๑╹◡╹๑)' >> ../restricted/wow_you_found_this.txt
