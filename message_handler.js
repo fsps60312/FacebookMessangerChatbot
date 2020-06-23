@@ -8,8 +8,10 @@ module.exports={
 			sender_psid,
 			message
 		]);
-		console.log('stderr:',String(result.err))
-		console.log('stdout:',String(result.stdout))
+		console.log('pid:',String(result.pid));
+		console.log('error:',result.error);
+		console.log('stderr:',String(result.stderr));
+		console.log('stdout:',String(result.stdout));
 //        if(result.err)return `Error: ${result.err}`;
 //        else return String(result.stdout);// Must use "String()" or bot won't work
 	}

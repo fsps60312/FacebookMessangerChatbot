@@ -1,4 +1,4 @@
-# WARNING: this script hasn't tested!
+# NOTE: this script has been tested on 2020/6/23
 # ssh -R 60313:localhost:22 b05902083@linux11.csie.ntu.edu.tw
 # scp -P 60313 kickstart.txt user@localhost:~
 # ssh user@localhost -p 60313
