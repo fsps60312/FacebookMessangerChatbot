@@ -2,7 +2,7 @@
 const {spawnSync} = require('child_process');
 module.exports={
 	get_response_text: function(page_access_token,sender_psid,message){
-		const result=spawnSync('/tmp2/b05902083/.dotnet/dotnet',[
+		const result=spawnSync('/home/bot/.dotnet/dotnet',[
 			'dotnet/code/message_handler.dll',
 			page_access_token,
 			sender_psid,
