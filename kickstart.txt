@@ -16,8 +16,7 @@ echo "session    optional     pam_exec.so quiet /etc/pam_session.sh" >> /etc/pam
 echo -e '#!/bin/sh\nif [ "$PAM_TYPE" = "close_session"  ]; then\n    sudo killall -9 -u restricted\nfi' > /etc/pam_session.sh
 chmod a+x /etc/pam_session.sh 
 apt update && sudo apt upgrade -y && sudo apt autoremove -y
-apt install -y net-tools inetutils-traceroute python3-pip cowsay fortune-mod
-funny-manpages fortunes-zh opencc rolldice tree
+apt install -y net-tools inetutils-traceroute python3-pip cowsay fortune-mod funny-manpages fortunes-zh opencc rolldice tree
 pip3 install jupyter tensorflow pandas gensim sklearn
 chmod 700 .
 (uuidgen && echo "找到這個uuid我請你星巴克OwO") > flag.txt
